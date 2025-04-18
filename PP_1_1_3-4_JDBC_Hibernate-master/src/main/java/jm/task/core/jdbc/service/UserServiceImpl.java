@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
 
     public void saveUser(String name, String lastName, byte age) {
         userDao.saveUser(name, lastName, age);
+        System.out.println("User " + name + " has been saved" + "\n");
     }
 
     public void removeUserById(long id) {
@@ -27,7 +28,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        List<User> users = userDao.getAllUsers();
+        for (User user : users) {
+            System.out.println(user);
+        }
+        return users;
     }
 
     public void cleanUsersTable() {
