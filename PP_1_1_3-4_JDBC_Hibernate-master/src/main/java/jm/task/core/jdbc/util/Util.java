@@ -12,9 +12,13 @@ public class Util {
     private static final String PASSWORD = "root";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
 
-    private static Connection connection;
+    private Util() {
 
-    static {
+    }
+
+    public static Connection getConnection() {
+        Connection connection = null;
+
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Connection OK");
@@ -22,24 +26,6 @@ public class Util {
             System.out.println("Connection FAILED");
             e.printStackTrace();
         }
-    }
-
-    private Util() {
-
-    }
-
-    public static Connection getConnection() {
         return connection;
-    }
-
-    public static void closeConnection() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-                System.out.println("Connection CLOSED");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }
