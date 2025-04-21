@@ -43,46 +43,74 @@ public class UserDaoJDBCImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
+        Connection connection = null;
 
-        try (Connection connection = Util.getConnection()) {
+        try {
+            connection = Util.getConnection();
             connection.setAutoCommit(false);
 
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setString(1, name);
-                ps.setString(2, lastName);
-                ps.setByte(3, age);
-                ps.executeUpdate();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, lastName);
+            ps.setByte(3, age);
+            ps.executeUpdate();
 
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                e.printStackTrace();
-            }
-
+            connection.commit();
+            ps.close();
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
             e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     @Override
     public void removeUserById(long id) {
         String sql = "DELETE FROM users WHERE id = ?";
+        Connection connection = null;
 
-        try (Connection connection = Util.getConnection()) {
+        try {
+            connection = Util.getConnection();
             connection.setAutoCommit(false);
 
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setLong(1, id);
-                ps.executeUpdate();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.executeUpdate();
 
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                e.printStackTrace();
-            }
-
+            connection.commit();
+            ps.close();
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
             e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
